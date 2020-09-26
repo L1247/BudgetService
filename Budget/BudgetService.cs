@@ -4,9 +4,13 @@ namespace Budget
 {
     public class BudgetService
     {
-        public double Query (DateTime start , DateTime end)
+        public double Query(DateTime start , DateTime end)
         {
-            return 0.0;
+            if (start > end)
+            {
+                return 0;
+            }
+            return 10;
         }
     }
 }
