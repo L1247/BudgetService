@@ -25,7 +25,17 @@ namespace Budget
             {
                 return 0;
             }
-            return 10;
+
+            var totalBudget = 0;
+            foreach (var budget in budgets)
+            {
+                if (budget.GetFirstDate() >= start && budget.GetFirstDate() <= end)
+                {
+                    totalBudget += budget.Amount / (DateTime.DaysInMonth(start.Year, start.Month)) * ((end - start).Days + 1);
+                }
+            }
+
+            return totalBudget;
         }
         
         

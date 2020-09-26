@@ -1,5 +1,6 @@
 
 using System;
+using System.Globalization;
 
 namespace Budget
 {
@@ -8,10 +9,9 @@ namespace Budget
         public string YearMonth { get; set; }
         public int    Amount    { get; set; }
         
-        public DateTime GetDateTime()
+        public DateTime GetFirstDate()
         {
-            var dateTime = Convert.ToDateTime(YearMonth);
-            Console.WriteLine(dateTime);
+            var dateTime = DateTime.ParseExact($"{YearMonth}", "yyyyMM", CultureInfo.InvariantCulture);
             return dateTime;
         } 
     }
