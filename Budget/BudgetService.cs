@@ -13,7 +13,7 @@ namespace Budget
             _repo = repo;
         }
 
-        public double Query(DateTime start , DateTime end)
+        public double Query(DateTime start, DateTime end)
         {
             if (start > end)
             {
@@ -29,15 +29,37 @@ namespace Budget
             var totalBudget = 0;
             foreach (var budget in budgets)
             {
-                if (budget.GetFirstDate() >= start && budget.GetFirstDate() <= end)
+                var daysInMonth = DateTime.DaysInMonth(budget.GetDate().Year, budget.GetDate().Month);
+                if (start.Year == end.Year && start.Month == end.Month)
                 {
-                    totalBudget += budget.Amount / (DateTime.DaysInMonth(start.Year, start.Month)) * ((end - start).Days + 1);
+                    if (budget.GetDate() >= start && budget.GetDate() <= end)
+                    {
+                        totalBudget += budget.Amount /
+                                       daysInMonth *
+                                       ((end - start).Days + 1);
+                    }
+                }
+                else
+                {
+                    if (budget.GetDate() >= start)
+                    {
+                        var lastOfMonth = new DateTime(start.Year, start.Month,daysInMonth);
+                        totalBudget += budget.Amount /
+                                       daysInMonth *
+                                       ((lastOfMonth - start).Days + 1);
+                    }
+                    else
+                    {
+                        totalBudget += budget.Amount /
+                                       daysInMonth *
+                                       ((start-budget.GetDate()).Days + 1);
+                    }
+
+
                 }
             }
 
             return totalBudget;
         }
-        
-        
     }
 }

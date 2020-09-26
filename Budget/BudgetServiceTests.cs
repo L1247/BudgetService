@@ -79,6 +79,56 @@ namespace Budget
             AmountShouldBe(310);
         }
 
+        [Test]
+        public void WhenQueryCrossEntireTwoMonth()
+        {
+            GivenListOfBudgets(new List<Budget>()
+            {
+                new Budget
+                {
+                    YearMonth = "202001",
+                    Amount = 310
+                },
+                new Budget
+                {
+                    YearMonth = "202002",
+                    Amount = 290
+                }
+            });
+            _repo.GetAll().Returns(_budgets);
+            _startDate = new DateTime(2020, 01, 01);
+            _endDate = new DateTime(2020, 02, 29);
+
+            AmountShouldBe(600);
+        }
+
+
+        [Test]
+        public void WhenQueryCrossTwoMonth()
+        {
+            GivenListOfBudgets(new List<Budget>()
+            {
+                new Budget
+                {
+                    YearMonth = "202001",
+                    Amount = 310
+                },
+                new Budget
+                {
+                    YearMonth = "202002",
+                    Amount = 2900
+                }
+            });
+            _repo.GetAll().Returns(_budgets);
+            _startDate = new DateTime(2020, 01, 31);
+            _endDate = new DateTime(2020, 02, 2);
+
+            AmountShouldBe(210);
+        }
+
+
+
+
         private void AmountShouldBe(double expected)
         {
             var amount = _budgetService.Query(_startDate, _endDate);
