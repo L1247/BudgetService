@@ -15,40 +15,31 @@ namespace Budget
 
         public double Query(DateTime start, DateTime end)
         {
-            if (start > end)
+            if (IsInvalidDateTimeRange(start , end))
             {
                 return 0;
             }
 
             var budgets = _repo.GetAll();
-            if (!budgets.Any())
-            {
-                return 0;
-            }
 
             var totalBudget = 0;
             foreach (var budget in budgets)
             {
-                var daysInMonth = DateTime.DaysInMonth(budget.GetDate().Year, budget.GetDate().Month);
-                if (start.Year == end.Year && start.Month == end.Month)
+                if (start.ToString("yyyyMM") == end.ToString("yyyyMM"))
                 {
-                        totalBudget += budget.Amount /
-                                       daysInMonth *
-                                       ((end - start).Days + 1);
+                        totalBudget += CalculateBudgetAmount(start , end , budget);
                 }
                 else
                 {
                     if (budget.YearMonth == start.ToString("yyyyMM"))
                     {
-                        var lastOfMonth = new DateTime(start.Year, start.Month,daysInMonth);
-                        totalBudget += budget.Amount /
-                                       daysInMonth *
-                                       ((lastOfMonth - start).Days + 1);
+                        var lastOfMonth = new DateTime(start.Year, start.Month,DateTime.DaysInMonth(budget.GetDate().Year, budget.GetDate().Month));
+                        totalBudget += CalculateBudgetAmount(start , lastOfMonth , budget); 
                     }
                     else if(budget.YearMonth == end.ToString("yyyyMM"))
                     {
                         totalBudget += budget.Amount /
-                                       daysInMonth *
+                                       DateTime.DaysInMonth(budget.GetDate().Year, budget.GetDate().Month) *
                                        ((end -budget.GetDate()).Days + 1);
                     }
                     else if(budget.GetDate() >= start && budget.GetDate() <= end)
@@ -59,6 +50,17 @@ namespace Budget
             }
 
             return totalBudget;
+        }
+
+        private int CalculateBudgetAmount(DateTime start , DateTime end , Budget budget)
+        {
+            var daysInMonth = DateTime.DaysInMonth(budget.GetDate().Year, budget.GetDate().Month);
+            return budget.Amount / daysInMonth * ((end - start).Days + 1);
+        }
+
+        private static bool IsInvalidDateTimeRange(DateTime start , DateTime end)
+        {
+            return start > end;
         }
     }
 }
