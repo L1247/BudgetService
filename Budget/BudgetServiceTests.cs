@@ -158,7 +158,53 @@ namespace Budget
 
             AmountShouldBe(2911);
         }
+        
+        [Test]
+        public void WhenQueryCrossThreeMonthByMiddleNoBudget()
+        {
+            GivenListOfBudgets(new List<Budget>()
+                               {
+                                   new Budget
+                                   {
+                                       YearMonth = "202001" ,
+                                       Amount    = 310
+                                   } ,
+                                   new Budget
+                                   {
+                                       YearMonth = "202003" ,
+                                       Amount    = 31
+                                   },
+                                   new Budget
+                                   {
+                                       YearMonth = "200001" ,
+                                       Amount    = 31
+                                   }
+                               });
+            _repo.GetAll().Returns(_budgets);
+            _startDate = new DateTime(2020 , 01 , 31);
+            _endDate   = new DateTime(2020 , 03 , 01);
 
+            AmountShouldBe(11);
+        }
+
+        
+        [Test]
+        public void WhenEmptyBudget()
+        {
+            GivenListOfBudgets(new List<Budget>()
+                               {
+                                  new Budget()
+                                  {
+                                      YearMonth = "208001",
+                                      Amount = 100,
+                                  }
+                               });
+            _repo.GetAll().Returns(_budgets);
+            _startDate = new DateTime(2020 , 01 , 31);
+            _endDate   = new DateTime(2020 , 03 , 01);
+
+            AmountShouldBe(0);
+        }
 
         private void AmountShouldBe(double expected)
         {
