@@ -1,10 +1,11 @@
-
+using System;
 using System.Collections.Generic;
 
 namespace Budget
 {
-    interface IBudgetRepo
+    public interface IBudgetRepo
     {
         List<Budget> GetAll();
+        // Budget GetBudgetPerMonth(DateTime dateTime);
     }
 }

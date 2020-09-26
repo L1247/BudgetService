@@ -3,11 +3,16 @@ using System;
 
 namespace Budget
 {
-    class Budget
+    public class Budget
     {
-        public Budget(DateTime yearMonth ,int amount)
+        public string YearMonth { get; set; }
+        public int    Amount    { get; set; }
+        
+        public DateTime GetDateTime()
         {
-            
-        }
+            var dateTime = Convert.ToDateTime(YearMonth);
+            Console.WriteLine(dateTime);
+            return dateTime;
+        } 
     }
 }
